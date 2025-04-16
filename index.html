@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CryptoEduar - Noticias Cripto en Tiempo Real</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #000;
+      color: #fff;
+    }
+
+    header {
+      background: #1a1a1a;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 0 10px red;
+    }
+
+    header h1 {
+      font-size: 2em;
+      color: red;
+      text-shadow: 0 0 10px red;
+    }
+
+    #noticias {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .noticia-tarjeta {
+      background: rgba(255, 0, 0, 0.08);
+      border: 2px solid red;
+      box-shadow: 0 0 10px red;
+      padding: 15px;
+      border-radius: 12px;
+      transition: transform 0.3s;
+    }
+
+    .noticia-tarjeta:hover {
+      transform: scale(1.02);
+    }
+
+    .noticia-tarjeta img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .noticia-tarjeta h3 {
+      color: white;
+      margin: 10px 0 5px;
+    }
+
+    .noticia-tarjeta p {
+      color: #ccc;
+    }
+
+    .noticia-tarjeta a {
+      display: inline-block;
+      margin-top: 8px;
+      color: #ff3333;
+      text-decoration: underline;
+    }
+
+    footer {
+      background: #1a1a1a;
+      padding: 15px;
+      text-align: center;
+      font-size: 0.9em;
+      color: #999;
+    }
+
+    @media (max-width: 768px) {
+      .noticia-tarjeta {
+        font-size: 0.9em;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>CryptoEduar Noticias</h1>
+    <p>Últimas noticias sobre criptomonedas en español</p>
+  </header>
+
+  <div id="noticias">
+    <!-- Noticias se insertarán aquí -->
+  </div>
+
+  <footer>
+    &copy; 2025 CryptoEduar - Todos los derechos reservados.
+  </footer>
+
+  <script>
+    const API_KEY = '7029e04c1d06f0215fd37aaa9a588654';
+    const URL = `https://gnews.io/api/v4/search?q=criptomonedas&lang=es&token=${API_KEY}`;
+    const contenedor = document.getElementById('noticias');
+
+    function obtenerNoticias() {
+      fetch(URL)
+        .then(res => res.json())
+        .then(data => {
+          data.articles.forEach(noticia => {
+            const tarjeta = document.createElement('div');
+            tarjeta.className = 'noticia-tarjeta';
+            tarjeta.innerHTML = `
+              <img src="${noticia.image || 'https://via.placeholder.com/300x150'}" alt="Imagen noticia">
+              <h3>${noticia.title}</h3>
+              <p>${noticia.description || ''}</p>
+              <a href="${noticia.url}" target="_blank">Leer más</a>
+            `;
+            contenedor.prepend(tarjeta);
+          });
+        })
+        .catch(err => console.error('Error al cargar noticias:', err));
+    }
+
+    obtenerNoticias(); // Cargar al inicio
+    setInterval(obtenerNoticias, 300000); // Actualiza cada 5 minutos
+  </script>
+
+</body>
+</html>
