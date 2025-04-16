@@ -1,130 +1,157 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CryptoEduar - Noticias Cripto en Tiempo Real</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CriptoEduar Noticias</title>
   <style>
+    :root {
+      --rojo-neon: #ff003c;
+      --fondo: #000;
+      --texto: #fff;
+    }
+
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: #000;
-      color: #fff;
+      background-color: var(--fondo);
+      color: var(--texto);
     }
 
     header {
-      background: #1a1a1a;
-      padding: 20px;
       text-align: center;
-      box-shadow: 0 0 10px red;
+      padding: 20px;
+      background: #111;
+      border-bottom: 2px solid var(--rojo-neon);
+      box-shadow: 0 0 10px var(--rojo-neon);
     }
 
     header h1 {
-      font-size: 2em;
-      color: red;
-      text-shadow: 0 0 10px red;
+      margin: 0;
+      color: var(--rojo-neon);
+      text-shadow: 0 0 10px var(--rojo-neon);
+    }
+
+    #noticias-section {
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
     }
 
     #noticias {
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
       gap: 20px;
-      padding: 20px;
+      justify-content: center;
     }
 
-    .noticia-tarjeta {
-      background: rgba(255, 0, 0, 0.08);
-      border: 2px solid red;
-      box-shadow: 0 0 10px red;
-      padding: 15px;
+    .noticia-card {
+      background: #111;
+      border: 2px solid var(--rojo-neon);
+      box-shadow: 0 0 10px var(--rojo-neon);
       border-radius: 12px;
-      transition: transform 0.3s;
-    }
-
-    .noticia-tarjeta:hover {
-      transform: scale(1.02);
-    }
-
-    .noticia-tarjeta img {
       width: 100%;
-      height: auto;
+      max-width: 330px;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease;
+    }
+
+    .noticia-card:hover {
+      transform: scale(1.03);
+    }
+
+    .noticia-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
       border-radius: 8px;
       margin-bottom: 10px;
     }
 
-    .noticia-tarjeta h3 {
-      color: white;
+    .noticia-card h3 {
       margin: 10px 0 5px;
     }
 
-    .noticia-tarjeta p {
+    .noticia-card p {
+      flex-grow: 1;
       color: #ccc;
     }
 
-    .noticia-tarjeta a {
-      display: inline-block;
-      margin-top: 8px;
-      color: #ff3333;
-      text-decoration: underline;
+    .noticia-card a {
+      margin-top: 10px;
+      text-decoration: none;
+      color: lightgreen;
     }
 
     footer {
-      background: #1a1a1a;
-      padding: 15px;
       text-align: center;
-      font-size: 0.9em;
-      color: #999;
+      padding: 15px;
+      background: #111;
+      border-top: 2px solid var(--rojo-neon);
+      margin-top: 30px;
     }
 
     @media (max-width: 768px) {
-      .noticia-tarjeta {
-        font-size: 0.9em;
+      #noticias {
+        flex-direction: column;
+        align-items: center;
       }
     }
   </style>
 </head>
 <body>
-
   <header>
-    <h1>CryptoEduar Noticias</h1>
-    <p>Últimas noticias sobre criptomonedas en español</p>
+    <h1>CriptoEduar Noticias</h1>
+    <p>Actualizadas en tiempo real</p>
   </header>
 
-  <div id="noticias">
-    <!-- Noticias se insertarán aquí -->
-  </div>
+  <section id="noticias-section">
+    <div id="noticias">
+      <p>Cargando noticias...</p>
+    </div>
+  </section>
 
   <footer>
-    &copy; 2025 CryptoEduar - Todos los derechos reservados.
+    &copy; 2025 CriptoEduar. Todos los derechos reservados.
   </footer>
 
   <script>
-    const API_KEY = '7029e04c1d06f0215fd37aaa9a588654';
-    const URL = `https://gnews.io/api/v4/search?q=criptomonedas&lang=es&token=${API_KEY}`;
-    const contenedor = document.getElementById('noticias');
+    const API_KEY = "45b326355e6646eb91a52c48776d369b";
+    const URL = `https://newsapi.org/v2/everything?q=criptomonedas&language=es&sortBy=publishedAt&pageSize=5&apiKey=${API_KEY}`;
+    const contenedor = document.getElementById("noticias");
 
-    function obtenerNoticias() {
+    function cargarNoticias() {
       fetch(URL)
         .then(res => res.json())
         .then(data => {
-          data.articles.forEach(noticia => {
-            const tarjeta = document.createElement('div');
-            tarjeta.className = 'noticia-tarjeta';
-            tarjeta.innerHTML = `
-              <img src="${noticia.image || 'https://via.placeholder.com/300x150'}" alt="Imagen noticia">
-              <h3>${noticia.title}</h3>
-              <p>${noticia.description || ''}</p>
-              <a href="${noticia.url}" target="_blank">Leer más</a>
-            `;
-            contenedor.prepend(tarjeta);
-          });
+          if (data.articles && data.articles.length > 0) {
+            contenedor.innerHTML = ""; // limpiar
+            data.articles.forEach(article => {
+              const card = document.createElement("div");
+              card.className = "noticia-card";
+              card.innerHTML = `
+                <img src="${article.urlToImage || 'https://via.placeholder.com/300x150'}" alt="Imagen noticia" />
+                <h3>${article.title}</h3>
+                <p>${article.description || ''}</p>
+                <a href="${article.url}" target="_blank">Leer más</a>
+              `;
+              contenedor.prepend(card); // nueva noticia primero
+            });
+          } else {
+            contenedor.innerHTML = "<p>No se encontraron noticias recientes.</p>";
+          }
         })
-        .catch(err => console.error('Error al cargar noticias:', err));
+        .catch(err => {
+          console.error(err);
+          contenedor.innerHTML = "<p style='color:red'>Error al cargar noticias.</p>";
+        });
     }
 
-    obtenerNoticias(); // Cargar al inicio
-    setInterval(obtenerNoticias, 300000); // Actualiza cada 5 minutos
+    // Cargar noticias inicialmente y luego cada 5 minutos
+    cargarNoticias();
+    setInterval(cargarNoticias, 5 * 60 * 1000);
   </script>
-
 </body>
 </html>
